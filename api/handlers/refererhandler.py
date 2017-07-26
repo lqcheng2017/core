@@ -59,6 +59,9 @@ class AnalysesHandler(RefererHandler):
     payload_schema_file = 'analysis.json'
     update_payload_schema_file = 'analysis-update.json'
 
+    def __init__(self, request=None, response=None):
+        super(AnalysesHandler, self).__init__(request, response)
+        self.phi = False
 
     def post(self, cont_name, cid):
         """
