@@ -14,6 +14,7 @@ SINGULAR_TO_PLURAL = {
     'acquisition': 'acquisitions',
     'collection':  'collections',
     'analysis':    'analyses',
+    'savesearch':  'savesearches',
 }
 PLURAL_TO_SINGULAR = {p: s for s, p in SINGULAR_TO_PLURAL.iteritems()}
 
