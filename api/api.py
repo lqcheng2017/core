@@ -2,6 +2,7 @@ import webapp2
 import webapp2_extras.routes
 
 from .download                      import Download
+from .handlers.abstractcontainerhandler import AbstractContainerHandler
 from .handlers.collectionshandler   import CollectionsHandler
 from .handlers.confighandler        import Config, Version
 from .handlers.containerhandler     import ContainerHandler
@@ -176,6 +177,10 @@ endpoints = [
 
         route('/<cid:site>/rules',              RulesHandler,          m=['GET', 'POST']),
         route('/<cid:site>/rules/<rid:{cid}>',  RuleHandler,           m=['GET', 'PUT', 'DELETE']),
+
+        # Abstract container
+
+        route('/container/<cid:{fname}><extra:.*>', AbstractContainerHandler, h='handle'),
 
 
         # Groups
