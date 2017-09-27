@@ -5,8 +5,8 @@ import dateutil
 from .. import config
 from .. import util
 from .. import validators
-from ..auth import containerauth, always_ok
-from ..dao import APIStorageException, containerstorage, containerutil, noop
+from ..auth import containerauth, always_ok, has_access
+from ..dao import APIStorageException, APIPermissionException, containerstorage, containerutil, noop
 from ..dao.containerstorage import AnalysisStorage
 from ..jobs.gears import get_gear
 from ..jobs.jobs import Job
@@ -560,6 +560,35 @@ class ContainerHandler(base.RequestHandler):
         self.config = self.container_handler_configurations['projects']
         self.storage = self.config['storage']
         return {'sessions_changed': self.storage.recalc_sessions_compliance(project_id=project_id)}
+
+    def get_phi(self, cid):
+
+        projection = None
+        
+        if cid == 'site':
+            if self.public_request:
+                raise APIPermissionException('Viewing site-level PHI fields requires login.')
+            projection = {'project_id': 0}
+        else:
+            project = self.storage.get_container(cid, projection={'permissions': 1})
+            if not self.user_is_admin and not has_access(self.uid, project, 'ro'):
+                raise APIPermissionException('User does not have access to project {} PHI fields'.format(cid))
+
+        return self.storage.get_phi_fields(cid, projection=projection)
+
+    def update_phi(self, cid):
+
+        if cid == 'site':
+            if not self.user_is_admin:
+                raise APIPermissionException('Modifying site-level PHI fields can only be done by a site admin.')
+        else:
+            project = self.storage.get_container(cid, projection={'permissions': 1})
+            if not self.user_is_admin and not has_access(self.uid, project, 'admin'):
+                raise APIPermissionException('User does not have access to project {} PHI fields'.format(cid))
+        
+        return self.storage.add_phi_fields(cid, self.request.json_body)
+
+
 
     def _get_validators(self):
         mongo_schema_uri = validators.schema_uri('mongo', self.config.get('storage_schema_file'))
