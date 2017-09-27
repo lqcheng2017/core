@@ -203,6 +203,8 @@ endpoints = [
             route('/<cid:{cid}>/recalc',   ContainerHandler, h='calculate_project_compliance', m=['POST']),
             route('/<cid:{cid}>/rules',    RulesHandler,                                       m=['GET', 'POST']),
             route('/<cid:{cid}>/rules/<rid:{cid}>',  RuleHandler,                              m=['GET', 'PUT', 'DELETE']),
+            route('/<cid:site|{cid}>/phi', ContainerHandler, h='get_phi',                      m=['GET']),
+            route('/<cid:site|{cid}>/phi', ContainerHandler, h='update_phi',                      m=['POST', 'PUT']),
         ]),
 
 

@@ -562,7 +562,7 @@ class ContainerHandler(base.RequestHandler):
         return {'sessions_changed': self.storage.recalc_sessions_compliance(project_id=project_id)}
 
     def get_phi(self, cid):
-
+        self.storage = self.container_handler_configurations['projects']['storage']
         projection = None
         
         if cid == 'site':
@@ -577,6 +577,7 @@ class ContainerHandler(base.RequestHandler):
         return self.storage.get_phi_fields(cid, projection=projection)
 
     def update_phi(self, cid):
+        self.storage = self.container_handler_configurations['projects']['storage']
 
         if cid == 'site':
             if not self.user_is_admin:
@@ -586,8 +587,12 @@ class ContainerHandler(base.RequestHandler):
             if not self.user_is_admin and not has_access(self.uid, project, 'admin'):
                 raise APIPermissionException('User does not have access to project {} PHI fields'.format(cid))
         
-        return self.storage.add_phi_fields(cid, self.request.json_body)
-
+        result = self.storage.add_phi_fields(cid, self.request.json_body)
+        log.debug(result)
+        if result['nModified'] == 1:
+            return {"modified": result['nModified']}
+        else:
+            self.abort(404, "Unable to update phi fields for project_id:{}".format(cid))
 
 
     def _get_validators(self):
