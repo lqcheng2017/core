@@ -3,7 +3,7 @@ from ..types import Origin
 
 PERMISSIONS = [
     {
-        'rid': 'no-phi-ro',
+        'rid': 'ro-no-phi',
         'name': 'Read-Only (No PHI)'
     },
     {
