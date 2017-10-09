@@ -15,7 +15,7 @@ from .. import config
 from .. import upload
 from .. import util
 from .. import validators
-from ..auth import containerauth, always_ok, _get_access, INTEGER_PERMISSIONS
+from ..auth import containerauth, always_ok, check_phi
 from ..dao import APIStorageException, containerstorage, noop
 from ..web import base
 from ..web.request import log_access, AccessType
@@ -133,7 +133,7 @@ class AnalysesHandler(RefererHandler):
         analysis = self.storage.get_container(_id)
         parent = self.storage.get_parent(analysis['parent']['type'], analysis['parent']['id'])
         projection = self.PHI_FIELDS
-        if _get_access(self.uid, parent) > INTEGER_PERMISSIONS['ro-no-phi'] or self.superuser_request:
+        if check_phi(self.uid, parent)or self.superuser_request:
             self.phi = True
             projection = None
         permchecker = self.get_permchecker(parent)
