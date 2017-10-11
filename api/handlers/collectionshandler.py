@@ -155,7 +155,7 @@ class CollectionsHandler(ContainerHandler):
         query = {'_id': {'$in': [ar['_id'] for ar in agg_res]}}
         if not self.is_true('archived'):
             query['archived'] = {'$ne': True}
-        projection = self.container_handler_configurations['sessions']['list_projection']
+        projection = self.PHI_FIELDS
         log.debug(query)
         log.debug(projection)
         sessions = list(config.db.sessions.find(query, projection))
@@ -181,7 +181,7 @@ class CollectionsHandler(ContainerHandler):
             query['session'] = bson.ObjectId(sid)
         elif sid != '':
             self.abort(400, sid + ' is not a valid ObjectId')
-        projection = self.container_handler_configurations['acquisitions']['list_projection']
+        projection = self.PHI_FIELDS
         acquisitions = list(config.db.acquisitions.find(query, projection))
         self._filter_all_permissions(acquisitions, self.uid)
         for acq in acquisitions:
