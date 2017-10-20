@@ -175,13 +175,14 @@ class RulesHandler(base.RequestHandler):
 
         doc = self.request.json
 
-        validate_data(doc, 'rule-add.json', 'input', 'POST', optional=True)
+        validate_data(doc, 'rule-new.json', 'input', 'POST', optional=True)
         try:
-            get_gear_by_name(doc['alg'])
+            gear = get_gear_by_name(doc['alg'])
         except APINotFoundException:
             self.abort(400, 'Cannot find gear for alg {}, alg not valid'.format(doc['alg']))
 
         doc['project_id'] = cid
+        doc.setdefault('config', gear['gear']['config'])
 
         result = config.db.project_rules.insert_one(doc)
         return { '_id': result.inserted_id }
