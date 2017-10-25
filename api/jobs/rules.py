@@ -199,6 +199,9 @@ def create_potential_jobs(db, container, container_type, file_):
                 gear = gears.get_gear_by_name(alg_name)
                 job = Job(str(gear['_id']), inputs, tags=['auto', alg_name])
 
+            if 'config' in rule:
+                job.config = rule['config']
+
             potential_jobs.append({
                 'job': job,
                 'rule': rule

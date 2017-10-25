@@ -105,8 +105,8 @@ def suggest_for_files(gear, files):
     return suggested_files
 
 def validate_gear_config(gear, config_):
-    if len(gear.get('manifest', {}).get('config', {})) > 0:
-        invocation = gear_tools.derive_invocation_schema(gear['manifest'])
+    if len(gear.get('gear', {}).get('config', {})) > 0:
+        invocation = gear_tools.derive_invocation_schema(gear['gear'])
         ci = gear_tools.isolate_config_invocation(invocation)
         validator = Draft4Validator(ci)
 

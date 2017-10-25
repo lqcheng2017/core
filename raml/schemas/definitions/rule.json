@@ -5,11 +5,7 @@
         "project_id":  { "type": "string" },
         "alg":         { "type": "string" },
         "name":        { "type": "string" },
-
-        "config": {
-            "type": "object",
-            "additionalProperties": { "$ref": "http://json-schema.org/draft-04/schema" }
-        },
+        "config":      { "type": "object" },
 
         "rule-items": {
             "type": "array",
