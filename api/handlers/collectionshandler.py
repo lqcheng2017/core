@@ -164,7 +164,7 @@ class CollectionsHandler(ContainerHandler):
         else:
             permchecker = containerauth.list_permission_checker(self)
         
-        projection = self.PHI_FIELDS
+        projection = self.PHI_FIELDS.copy()
         if self.is_true('phi'):
             projection = None
             phi = True
@@ -204,7 +204,7 @@ class CollectionsHandler(ContainerHandler):
         else:
             permchecker = containerauth.list_permission_checker(self)
         
-        projection = self.PHI_FIELDS
+        projection = self.PHI_FIELDS.copy()
         if self.is_true('phi'):
             projection = None
             phi = True
