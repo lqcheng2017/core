@@ -18,6 +18,7 @@ from ..dao import liststorage
 from ..dao import APIStorageException
 from ..dao import containerutil
 from ..web.request import log_access, AccessType
+from .projectsettings import phi_payload_decorator
 
 
 def initialize_list_configurations():
@@ -312,7 +313,7 @@ class TagsListHandler(ListHandler):
     TagsListHandler overrides put, delete methods of ListHandler to propagate changes to group tags
     If a tag is renamed or deleted at the group level, project, session and acquisition tags will also be renamed/deleted
     """
-
+    @phi_payload_decorator
     def put(self, cont_name, list_name, **kwargs):
         _id = kwargs.get('cid')
         result = super(TagsListHandler, self).put(cont_name, list_name, **kwargs)
@@ -505,6 +506,7 @@ class FileListHandler(ListHandler):
     def get_info(self, cont_name, list_name, **kwargs):
         return super(FileListHandler,self).get(cont_name, list_name, **kwargs)
 
+    @phi_payload_decorator
     def modify_info(self, cont_name, list_name, **kwargs):
         _id = kwargs.pop('cid')
         permchecker, storage, _, _, _ = self._initialize_request(cont_name, list_name, _id, query_params=kwargs)
@@ -540,6 +542,7 @@ class FileListHandler(ListHandler):
 
         return upload.process_upload(self.request, upload.Strategy.targeted, container_type=cont_name, id_=_id, origin=self.origin)
 
+    @phi_payload_decorator
     @validators.verify_payload_exists
     def put(self, cont_name, list_name, **kwargs):
         _id = kwargs.pop('cid')
